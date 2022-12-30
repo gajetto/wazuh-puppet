@@ -25,12 +25,12 @@ jobs:
     - name: Create Puppet module
       run: |
         pdk validate
-        pdk new module mymodule
+        pdk build
     - name: Create artifact
       uses: actions/upload-artifact@v2
       with:
-        name: mymodule
-        path: mymodule
+        name: wazuh-module
+        path: ./pkg/*
 
   amazonlinux:
     runs-on: ubuntu-latest
