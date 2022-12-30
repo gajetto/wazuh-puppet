@@ -13,12 +13,12 @@ jobs:
       - name: Run PDK validation tests
         uses: './.github/actions/validate_module'
 
-      name: Save Wazuh module
-      uses: actions/upload-artifact@v3
-      with:
-        name: Wazuh-module
-        path: ./pkg/*
-        retention-days: 1
+      - name: Save Wazuh module
+        uses: actions/upload-artifact@v3
+        with:
+          name: Wazuh-module
+          path: ./pkg/*
+          retention-days: 1
 
   amazonlinux:
     runs-on: ubuntu-latest
