@@ -10,8 +10,8 @@ jobs:
     - uses: actions/checkout@v2
     - name: Install dependencies
       run: |
-        apt-get update
-        apt-get install -y puppet-server
+        sudo apt-get update
+        sudo apt-get install -y puppet-server
     - name: Create Puppet module
       run: |
         pdk validate
