@@ -4,21 +4,23 @@ on: [push, workflow_dispatch]
 
 jobs:
 
-  pdk-validate:
+  validate-and-build:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out code
-        uses: actions/checkout@v2
-
-      - name: Run PDK validation tests
-        uses: './.github/actions/validate_module'
-
-      - name: Save Wazuh module
-        uses: actions/upload-artifact@v3
-        with:
-          name: Wazuh-module
-          path: ./pkg/*
-          retention-days: 1
+    - uses: actions/checkout@v2
+    - name: Install dependencies
+      run: |
+        apt-get update
+        apt-get install -y puppet-server
+    - name: Create Puppet module
+      run: |
+        pdk validate
+        pdk new module mymodule
+    - name: Create artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: mymodule
+        path: mymodule
 
   amazonlinux:
     runs-on: ubuntu-latest
