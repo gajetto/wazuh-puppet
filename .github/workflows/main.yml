@@ -8,6 +8,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - name: Create enviroment variables
+      run: |
+        cat VERSION > $GITHUB_ENV
+        WAZUH_VERSION = ${{env.VERSION}}
+        WAZUH_VERSION = ${WAZUH_VERSION:1}
     - name: Install dependencies
       run: |
         sudo apt-get update
@@ -34,7 +39,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: wazuh-module
-        path: ./pkg/*
+        path: ./pkg/wazuh-wazuh-$WAZUH_VERSION.tar.gz
 
 
 #  amazonlinux:
@@ -68,6 +73,11 @@ jobs:
     needs: validate-and-build
     steps:
     - uses: actions/checkout@v2
+    - name: Create enviroment variables
+      run: |
+        cat VERSION > $GITHUB_ENV
+        WAZUH_VERSION = ${{env.VERSION}}
+        WAZUH_VERSION = ${WAZUH_VERSION:1}
     - name: Install dependencies
       run: |
         sudo apt-get update
@@ -98,7 +108,7 @@ jobs:
         name: wazuh-module
     - name: Install Wazuh Module
       run: |
-        sudo puppet module install ./wazuh*.tar
+        sudo puppet module install ./wazuh-wazuh-$WAZUH_VERSION.tar.gz
 
 
 #  ubuntu18:
