@@ -82,9 +82,11 @@ jobs:
         sudo ln -s /opt/puppetlabs/server/bin/puppetserver /bin
     - name: Configure puppet server
       run: |
-        sudo echo "[main]" >> /etc/puppetlabs/puppet/puppet.conf
-        sudo echo "server = "$hostname >> /etc/puppetlabs/puppet/puppet.conf
-        sudo echo "dns_alt_names = "$hostname >> /etc/puppetlabs/puppet/puppet.conf
+        echo "[main]" | sudo tee -a /etc/puppetlabs/puppet/puppet.conf > /dev/null
+        echo "server = "$hostname | sudo tee -a /etc/puppetlabs/puppet/puppet.conf > /dev/null
+        echo "dns_alt_names = "$hostname | sudo tee -a /etc/puppetlabs/puppet/puppet.conf > /dev/null
+#        echo "server = "$hostname >> /etc/puppetlabs/puppet/puppet.conf
+#        echo "dns_alt_names = "$hostname >> /etc/puppetlabs/puppet/puppet.conf
     - name: Start Puppet Server
       run: |
         sudo systemctl start puppetserver
