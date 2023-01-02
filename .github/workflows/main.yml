@@ -13,8 +13,8 @@ jobs:
         cat VERSION > $GITHUB_ENV
     - name: create WAZUH_VERSION variable
       run: |
-        VERSION = ${{ env.WAZUH-PUPPET_VERSION }}
-        WAZUH_VERSION = ${VERSION:1}
+        VERSION=${{ env.WAZUH-PUPPET_VERSION }}
+        WAZUH_VERSION=${VERSION:1}
     - name: Install dependencies
       run: |
         sudo apt-get update
@@ -80,8 +80,8 @@ jobs:
         cat VERSION > $GITHUB_ENV
     - name: create WAZUH_VERSION variable
       run: |
-        VERSION = ${{ env.WAZUH-PUPPET_VERSION }}
-        WAZUH_VERSION = ${VERSION:1}
+        VERSION=${{ env.WAZUH-PUPPET_VERSION }}
+        WAZUH_VERSION=${VERSION:1}
     - name: Install dependencies
       run: |
         sudo apt-get update
