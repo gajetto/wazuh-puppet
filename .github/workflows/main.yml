@@ -41,7 +41,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: wazuh-module
-        path: ./pkg/wazuh-wazuh-${{ WAZUH_VERSION }}.tar.gz
+        path: ./pkg/wazuh-wazuh-${{WAZUH_VERSION}}.tar.gz
 
 
 #  amazonlinux:
