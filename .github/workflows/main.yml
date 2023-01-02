@@ -113,9 +113,10 @@ jobs:
     - name: Create manifest for install Wazuh stack
       run: |
         hostname=$(sudo puppetserver ca list --all | awk '{if(NR>1)print $1;}')
-        sudo echo "node $hostname {" | sudo tee -a /etc/puppetlabs/code/environments/production/manifests/stack.pp  > /dev/null
+        sudo echo ""node "$hostname""" {" | sudo tee -a /etc/puppetlabs/code/environments/production/manifests/stack.pp  > /dev/null
         sudo echo "class {'wazuh::manager':} ->  class {'wazuh::indexer':} -> class {'wazuh::filebeat_oss':} -> class {'wazuh::dashboard':}" | sudo tee -a /etc/puppetlabs/code/environments/production/manifests/stack.pp > /dev/null
         sudo echo "}" | sudo tee -a /etc/puppetlabs/code/environments/production/manifests/stack.pp > /dev/null
+        sudo cat /etc/puppetlabs/code/environments/production/manifests/stack.pp
         sudo puppet agent -t
 
 
