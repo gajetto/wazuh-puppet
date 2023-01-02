@@ -11,6 +11,8 @@ jobs:
     - name: Create enviroment variables
       run: |
         cat VERSION > $GITHUB_ENV
+    - name: create WAZUH_VERSION variable
+      run: |
         WAZUH_VERSION = ${{ env.WAZUH-PUPPET_VERSION }}
         WAZUH_VERSION = ${WAZUH_VERSION:1}
     - name: Install dependencies
@@ -76,6 +78,8 @@ jobs:
     - name: Create enviroment variables
       run: |
         cat VERSION > $GITHUB_ENV
+    - name: create WAZUH_VERSION variable
+      run: |
         WAZUH_VERSION = ${{ env.WAZUH-PUPPET_VERSION }}
         WAZUH_VERSION = ${WAZUH_VERSION:1}
     - name: Install dependencies
