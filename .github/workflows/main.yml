@@ -95,6 +95,7 @@ jobs:
         echo "[main]" | sudo tee -a /etc/puppetlabs/puppet/puppet.conf > /dev/null
         echo "server = "$hostname | sudo tee -a /etc/puppetlabs/puppet/puppet.conf > /dev/null
         echo "dns_alt_names = "$hostname | sudo tee -a /etc/puppetlabs/puppet/puppet.conf > /dev/null
+        sudo echo "127.0.0.1 puppet" | sudo tee -a /etc/hosts > /dev/null
 #        echo "server = "$hostname >> /etc/puppetlabs/puppet/puppet.conf
 #        echo "dns_alt_names = "$hostname >> /etc/puppetlabs/puppet/puppet.conf
     - name: Start Puppet Server
