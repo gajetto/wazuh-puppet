@@ -11,10 +11,6 @@ jobs:
     - name: Create enviroment variables
       run: |
         cat VERSION > $GITHUB_ENV
-    - name: create WAZUH_VERSION variable
-      run: |
-        VERSION=${{ env.WAZUH-PUPPET_VERSION }}
-        WAZUH_VERSION=${VERSION:1}
     - name: Install dependencies
       run: |
         sudo apt-get update
@@ -41,7 +37,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: wazuh-module
-        path: ./pkg/wazuh-wazuh-${{WAZUH_VERSION}}".tar.gz
+        path: ./pkg/wazuh-wazuh-${{ env.VERSION }}.tar.gz
 
 
 #  amazonlinux:
@@ -112,7 +108,7 @@ jobs:
         name: wazuh-module
     - name: Install Wazuh Module
       run: |
-        sudo puppet module install ./wazuh-wazuh-${{WAZUH_VERSION}}.tar.gz
+        sudo puppet module install ./wazuh-wazuh-${{ env.VERSION }}.tar.gz
 
 
 #  ubuntu18:
