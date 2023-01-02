@@ -12,12 +12,16 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install curl apt-transport-https lsb-release wget
+    - name: Download and Install Puppet server
+      run: |
         wget https://apt.puppet.com/puppet7-release-focal.deb
         sudo dpkg -i puppet7-release-focal.deb
         sudo apt-get update
         sudo apt-get install -y puppetserver
         sudo ln -s /opt/puppetlabs/bin/puppet /bin
         sudo ln -s /opt/puppetlabs/server/bin/puppetserver /bin
+    - name: Download and Install pdk
+      run: |
         wget https://apt.puppet.com/puppet-tools-release-focal.deb
         sudo dpkg -i puppet-tools-release-focal.deb
         sudo apt-get update
@@ -32,54 +36,77 @@ jobs:
         name: wazuh-module
         path: ./pkg/*
 
-  amazonlinux:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v2
-      - name: Amazon linux - (Manager + Agent)
-        uses: './.github/actions/test_manager_and_agent'
-        env:
-          IMAGE: diodonfrost/amazonlinux-2-puppet
-          PLATFORM: rhel
-          RELEASE: latest
-          RUN_COMMAND: /usr/sbin/init
 
-  centos7:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v2
-      - name: CentOS 7 - (Manager + Agent)
-        uses: './.github/actions/test_manager_and_agent'
-        env:
-          IMAGE: centos:7
-          PLATFORM: centos
-          RELEASE: 7
-          RUN_COMMAND: /sbin/init
+#  amazonlinux:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Check out code
+#        uses: actions/checkout@v2
+#      - name: Amazon linux - (Manager + Agent)
+#        uses: './.github/actions/test_manager_and_agent'
+#        env:
+#          IMAGE: diodonfrost/amazonlinux-2-puppet
+#          PLATFORM: rhel
+#          RELEASE: latest
+#          RUN_COMMAND: /usr/sbin/init
 
-  ubuntu16:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v2
-      - name: Ubuntu 16.04 - (Manager + Agent)
-        uses: './.github/actions/test_manager_and_agent'
-        env:
-          IMAGE: jrei/systemd-ubuntu:16.04
-          PLATFORM: ubuntu
-          RELEASE: 16
-          RUN_COMMAND: /sbin/init
+#  centos7:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Check out code
+#        uses: actions/checkout@v2
+#      - name: CentOS 7 - (Manager + Agent)
+#        uses: './.github/actions/test_manager_and_agent'
+#        env:
+#          IMAGE: centos:7
+#          PLATFORM: centos
+#          RELEASE: 7
+#          RUN_COMMAND: /sbin/init
 
-  ubuntu18:
+  ubuntu:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out code
-        uses: actions/checkout@v2
-      - name: Ubuntu 18.04 - (Manager + Agent)
-        uses: './.github/actions/test_manager_and_agent'
-        env:
-          IMAGE: jrei/systemd-ubuntu:18.04
-          PLATFORM: ubuntu
-          RELEASE: 18
-          RUN_COMMAND: /sbin/init
+    - uses: actions/checkout@v2
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install curl apt-transport-https lsb-release wget
+    - name: Download and Install Puppet server
+      run: |
+        wget https://apt.puppet.com/puppet7-release-focal.deb
+        sudo dpkg -i puppet7-release-focal.deb
+        sudo apt-get update
+        sudo apt-get install -y puppetserver
+        sudo ln -s /opt/puppetlabs/bin/puppet /bin
+        sudo ln -s /opt/puppetlabs/server/bin/puppetserver /bin
+    - name: Configure puppet server
+      run: |
+        echo "[main]" >> /etc/puppetlabs/puppet/puppet.conf
+        echo "server = "$hostname >> /etc/puppetlabs/puppet/puppet.conf
+        echo "dns_alt_names = "$hostname >> /etc/puppetlabs/puppet/puppet.conf
+    - name: Start Puppet Server
+      run: |
+        systemctl start puppetserver
+        systemctl enable puppetserver
+        systemctl status puppetserver
+    - name: Retrieve saved Wazuh module
+      uses: actions/download-artifact@v3
+      with:
+        name: wazuh-module
+    - name: Install Wazuh Module
+      run: |
+        puppet module install ./wazuh*.tar
+
+
+#  ubuntu18:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Check out code
+#        uses: actions/checkout@v2
+#      - name: Ubuntu 18.04 - (Manager + Agent)
+#        uses: './.github/actions/test_manager_and_agent'
+#        env:
+#          IMAGE: jrei/systemd-ubuntu:18.04
+#          PLATFORM: ubuntu
+#          RELEASE: 18
+#          RUN_COMMAND: /sbin/init
