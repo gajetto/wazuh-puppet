@@ -82,21 +82,21 @@ jobs:
         sudo ln -s /opt/puppetlabs/server/bin/puppetserver /bin
     - name: Configure puppet server
       run: |
-        echo "[main]" >> /etc/puppetlabs/puppet/puppet.conf
-        echo "server = "$hostname >> /etc/puppetlabs/puppet/puppet.conf
-        echo "dns_alt_names = "$hostname >> /etc/puppetlabs/puppet/puppet.conf
+        sudo echo "[main]" >> /etc/puppetlabs/puppet/puppet.conf
+        sudo echo "server = "$hostname >> /etc/puppetlabs/puppet/puppet.conf
+        sudo echo "dns_alt_names = "$hostname >> /etc/puppetlabs/puppet/puppet.conf
     - name: Start Puppet Server
       run: |
-        systemctl start puppetserver
-        systemctl enable puppetserver
-        systemctl status puppetserver
+        sudo systemctl start puppetserver
+        sudo systemctl enable puppetserver
+        sudo systemctl status puppetserver
     - name: Retrieve saved Wazuh module
       uses: actions/download-artifact@v3
       with:
         name: wazuh-module
     - name: Install Wazuh Module
       run: |
-        puppet module install ./wazuh*.tar
+        sudo puppet module install ./wazuh*.tar
 
 
 #  ubuntu18:
