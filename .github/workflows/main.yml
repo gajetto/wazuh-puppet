@@ -193,7 +193,7 @@ jobs:
 
     - name: Diff Checks
       run: |
-        log=$(awk 'BEGIN{IGNORECASE=1} /ERROR|CRITICAL/' /var/ossec/logs/ossec.log)
+        log=$(sudo awk 'BEGIN{IGNORECASE=1} /ERROR|CRITICAL/' /var/ossec/logs/ossec.log)
         if [[ -z "$log" ]]; then
           echo "No errors in ossec.log"
         else
