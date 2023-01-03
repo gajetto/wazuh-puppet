@@ -191,6 +191,17 @@ jobs:
           exit 1
         fi
 
+    - name: Diff Checks
+      run: |
+        log=$(awk 'BEGIN{IGNORECASE=1} /ERROR|CRITICAL/' /var/ossec/logs/ossec.log)
+        if [[ -z "$log" ]]; then
+          echo "No errors in ossec.log"
+        else
+          echo "Errors in ossec.log:"
+          echo "${log}"
+          exit 1
+        fi
+
 
 
 #  ubuntu18:
