@@ -182,11 +182,11 @@ jobs:
         TOKEN: $(curl -s -u wazuh-wui:wazuh-wui -k -X GET "https://0.0.0.0:55000/security/user/authenticate?raw=true")
 
     - name: Check errors in ossec.log
-      run: ./.github/actions/test_manager_and_agent/single-node-log-check.sh
+      run: sudo bash ./.github/actions/test_manager_and_agent/single-node-log-check.sh
 
 
     - name: Check filebeat output
-      run: ./.github/actions/test_manager_and_agent/single-node-filebeat-check.sh
+      run: sudo bash ./.github/actions/test_manager_and_agent/single-node-filebeat-check.sh
 
     - name: Check Wazuh dashboard service URL
       run: |
