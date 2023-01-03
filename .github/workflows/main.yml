@@ -139,7 +139,7 @@ jobs:
         fi
     - name: Check Wazuh indexer nodes
       run: |
-        nodes="`curl -XGET "https://0.0.0.0:9200/_cat/nodes" -u admin:admin -k -s | grep -E "indexer" | wc -l`"
+        nodes="`curl -XGET "https://0.0.0.0:9200/_cat/nodes" -u admin:admin -k -s | wc -l`"
         if [[ $nodes -eq 1 ]]; then
           echo "Wazuh indexer nodes: ${nodes}"
         else
