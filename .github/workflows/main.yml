@@ -116,30 +116,30 @@ jobs:
         sudo cat /etc/puppetlabs/code/environments/production/manifests/stack.pp
     - name: Install Wazuh Stack
       run: sudo bash -c 'puppet agent -tod || test $? -eq 2'
+
     - name: Wait for start Wazuh Cluster
       run: sleep 120
 
     - name: Check Wazuh indexer start
       run: |
-        sleep 60
-        status_green="`curl -XGET "https://0.0.0.0:9200/_cluster/health" -u admin:SecretPassword -k -s | grep green | wc -l`"
+        status_green="`curl -XGET "https://0.0.0.0:9200/_cluster/health" -u admin:admin -k -s | grep green | wc -l`"
         if [[ $status_green -eq 1 ]]; then
-          curl -XGET "https://0.0.0.0:9200/_cluster/health" -u admin:SecretPassword -k -s
+          curl -XGET "https://0.0.0.0:9200/_cluster/health" -u admin:admin -k -s
         else
-          curl -XGET "https://0.0.0.0:9200/_cluster/health" -u admin:SecretPassword -k -s
+          curl -XGET "https://0.0.0.0:9200/_cluster/health" -u admin:admin -k -s
           exit 1
         fi
-        status_index="`curl -XGET "https://0.0.0.0:9200/_cat/indices" -u admin:SecretPassword -k -s | wc -l`"
-        status_index_green="`curl -XGET "https://0.0.0.0:9200/_cat/indices" -u admin:SecretPassword -k -s | grep "green" | wc -l`"
+        status_index="`curl -XGET "https://0.0.0.0:9200/_cat/indices" -u admin:admin -k -s | wc -l`"
+        status_index_green="`curl -XGET "https://0.0.0.0:9200/_cat/indices" -u admin:admin -k -s | grep "green" | wc -l`"
         if [[ $status_index_green -eq $status_index ]]; then
-          curl -XGET "https://0.0.0.0:9200/_cat/indices" -u admin:SecretPassword -k -s
+          curl -XGET "https://0.0.0.0:9200/_cat/indices" -u admin:admin -k -s
         else
-          curl -XGET "https://0.0.0.0:9200/_cat/indices" -u admin:SecretPassword -k -s
+          curl -XGET "https://0.0.0.0:9200/_cat/indices" -u admin:admin -k -s
           exit 1
         fi
     - name: Check Wazuh indexer nodes
       run: |
-        nodes="`curl -XGET "https://0.0.0.0:9200/_cat/nodes" -u admin:SecretPassword -k -s | grep -E "indexer" | wc -l`"
+        nodes="`curl -XGET "https://0.0.0.0:9200/_cat/nodes" -u admin:admin -k -s | grep -E "indexer" | wc -l`"
         if [[ $nodes -eq 1 ]]; then
           echo "Wazuh indexer nodes: ${nodes}"
         else
@@ -148,7 +148,7 @@ jobs:
         fi
     - name: Check documents into wazuh-alerts index
       run: |
-        docs="`curl -XGET "https://0.0.0.0:9200/wazuh-alerts*/_doc/_search" -u admin:SecretPassword -k -s | jq -r ".hits.total.value"`"
+        docs="`curl -XGET "https://0.0.0.0:9200/wazuh-alerts*/_doc/_search" -u admin:admin -k -s | jq -r ".hits.total.value"`"
         if [[ $docs -gt 100 ]]; then
           echo "wazuh-alerts index documents: ${docs}"
         else
@@ -157,8 +157,8 @@ jobs:
         fi
     - name: Check Wazuh templates
       run: |
-        qty_templates="`curl -XGET "https://0.0.0.0:9200/_cat/templates" -u admin:SecretPassword -k -s | grep -P "wazuh|wazuh-agent|wazuh-statistics" | wc -l`"
-        templates="`curl -XGET "https://0.0.0.0:9200/_cat/templates" -u admin:SecretPassword -k -s | grep -P "wazuh|wazuh-agent|wazuh-statistics"`"
+        qty_templates="`curl -XGET "https://0.0.0.0:9200/_cat/templates" -u admin:admin -k -s | grep -P "wazuh|wazuh-agent|wazuh-statistics" | wc -l`"
+        templates="`curl -XGET "https://0.0.0.0:9200/_cat/templates" -u admin:admin -k -s | grep -P "wazuh|wazuh-agent|wazuh-statistics"`"
         if [[ $qty_templates -eq 3 ]]; then
           echo "wazuh templates:"
           echo "${templates}"
@@ -190,7 +190,7 @@ jobs:
 
     - name: Check Wazuh dashboard service URL
       run: |
-        status=$(curl -XGET --silent  https://0.0.0.0:443/app/status -k -u admin:SecretPassword -I -s | grep -E "^HTTP" | awk  '{print $2}')
+        status=$(curl -XGET --silent  https://0.0.0.0:443/app/status -k -u admin:admin -I -s | grep -E "^HTTP" | awk  '{print $2}')
         if [[ $status -eq 200 ]]; then
           echo "Wazuh dashboard status: ${status}"
         else
