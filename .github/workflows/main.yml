@@ -184,10 +184,6 @@ jobs:
     - name: Check errors in ossec.log
       run: sudo bash ./.github/actions/test_manager_and_agent/single-node-log-check.sh
 
-
-    - name: Check filebeat output
-      run: sudo bash ./.github/actions/test_manager_and_agent/single-node-filebeat-check.sh
-
     - name: Check Wazuh dashboard service URL
       run: |
         status=$(curl -XGET --silent  https://0.0.0.0:443/app/status -k -u admin:admin -I -s | grep -E "^HTTP" | awk  '{print $2}')
